@@ -4,6 +4,8 @@ Shader"Unlit/Line"
     {
         _Color ("Main Color", Color) = (1,1,1,1)
         _MainTex("Main Texture", 2D) = "white" {}
+        _SecondTex("Second Texture", 2D)="white"{}
+        _SecondColor("Second Color", Color)=(1,1,1,1)
         _Start("Start",float)=0
         _Width("Width", float)=1
         _Multiple("Multiple", float)=0
@@ -23,6 +25,8 @@ Shader"Unlit/Line"
             #pragma fragment frag
             uniform half4 _Color;
             uniform sampler2D _MainTex;
+            uniform half4 _SecondColor;
+            uniform sampler2D _SecondTex;
             uniform float _Start;
             uniform float _Width;
             uniform float _Multiple;
@@ -61,8 +65,16 @@ Shader"Unlit/Line"
 
             half4 frag (VertexOutput i) : COLOR
             {
-                float4 color = tex2D(_MainTex, i.texcoord) * _Color;
-                color.a = drawLine(i.texcoord, _Start, _Width, _Multiple);
+                half4 color;
+                float pourcent = (1.0 / _Multiple) * 100.0;
+                if ((i.texcoord.x * 100) % (2 * pourcent)<pourcent)
+                {
+                    color = tex2D(_MainTex, i.texcoord) * _Color;
+                }
+                else
+                {
+                    color = tex2D(_SecondTex, i.texcoord) * _SecondColor;
+                }
 	            return color;
             }
             ENDCG
