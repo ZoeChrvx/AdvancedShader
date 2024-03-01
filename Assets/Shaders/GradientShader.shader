@@ -2,8 +2,10 @@ Shader"Unlit/GradientShader"
 {
     Properties
     {
+        _SecondColor ("Seconde Color", Color) = (1,1,1,1)
         _Color ("Main Color", Color) = (1,1,1,1)
         _MainTex("Main Texture", 2D) = "white" {}
+
     }
     SubShader
     {
@@ -19,8 +21,9 @@ Shader"Unlit/GradientShader"
             #pragma vertex vert
             #pragma fragment frag
             uniform half4 _Color;
+            uniform half4 _SecondColor;
             uniform sampler2D _MainTex;
-            uniform float4 _MainTex_ST;    
+            uniform float4 _MainTex_ST;  
 
 
             struct VertexInput
@@ -45,8 +48,10 @@ Shader"Unlit/GradientShader"
 
             half4 frag (VertexOutput i) : COLOR
             {
-	            float4 color = tex2D(_MainTex, i.texcoord) * _Color;
-	            color.a = i.texcoord.x;
+                
+                float4 color = tex2D(_MainTex, i.texcoord) * ((_Color * i.texcoord.x) + _SecondColor* (1-i.texcoord.x));
+	            //color = i.texcoord.x;
+                //secondColor = i.texcoord.x;
 	            return color;
 }
             ENDCG

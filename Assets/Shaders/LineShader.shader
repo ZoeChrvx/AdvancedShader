@@ -1,10 +1,9 @@
-Shader"Unlit/Line"
+Shader"Unlit/LineShader"
 {
     Properties
     {
         _Color ("Main Color", Color) = (1,1,1,1)
         _MainTex("Main Texture", 2D) = "white" {}
-        _SecondTex("Second Texture", 2D)="white"{}
         _SecondColor("Second Color", Color)=(1,1,1,1)
         _Start("Start",float)=0
         _Width("Width", float)=1
@@ -58,9 +57,9 @@ Shader"Unlit/Line"
             {
                 if (uv.x > start && uv.x < end)
                 {
-                    return 1;
+                    return _Color;
                 }
-                return 0;
+                return _SecondColor;
             }
 
             half4 frag (VertexOutput i) : COLOR
